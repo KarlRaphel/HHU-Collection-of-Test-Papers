@@ -28,7 +28,7 @@
 
 如果网络环境差，下载速度较慢，可在本项目的Gitee镜像进行下载
 
-https://gitee.com/karl-raphel/HHU-Collection-of-Test-Papers
+https://gitee.com/KarlRaphel/HHU-Collection-of-Test-Papers
 
 请尽可能在Github提交新资料~
 
