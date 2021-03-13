@@ -22,18 +22,6 @@
 
 • GitHub 带有便捷的 Issue 和 Pull Request 协作功能，并且可以方便地对贡献的质量进行监督和调整。
 
-同时，在Gitee有镜像项目，方便国内网络访问
-
-## 资料下载
-
-如果网络环境差，下载速度较慢，可在本项目的Gitee镜像进行下载
-
-https://gitee.com/KarlRaphel/HHU-Collection-of-Test-Papers
-
-请尽可能在Github提交新资料~
-
-如果不了解如何使用Git，亦可发送附件至文末邮箱，将不定期整理并更新
-
 ## 贡献
 
 由于目前本项目中的文件大多是一人整理，如有不当之处敬请在Issues中指出
@@ -45,6 +33,10 @@ https://gitee.com/KarlRaphel/HHU-Collection-of-Test-Papers
 欢迎贡献新资料！！！
 
 每个新资料的贡献，都将为此项目增光添彩
+
+请尽可能在Github提交新资料~
+
+如果不了解如何使用Git，亦可发送附件至文末邮箱，将不定期整理并更新
 
 ## 版权
 
