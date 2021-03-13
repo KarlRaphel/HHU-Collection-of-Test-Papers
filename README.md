@@ -1,3 +1,3 @@
-# HHU-Collection-of-Test-Papers
-This is a plan to collect test papers and reference materials of various subjects, so as to help students to study with more emphasis.
-##施工ing
+# HHU往年卷整合项目
+这是一个自发项目，用于保存各学科的往年卷和一些相关的学习资料，用于帮助学生更有针对性地学习。
+## 施工ing
