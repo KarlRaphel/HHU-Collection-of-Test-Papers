@@ -1,0 +1,220 @@
+CWADD1   EQU   08000H   ;写指令代码地址（E1）C--CODE，指令；W-WRITE，写
+DWADD1   EQU   08001H   ;写显示数据地址（E1）D--DATA，数据；W-WRITE，写
+CRADD1   EQU   08002H   ;读状态字地址（E1）  C--CODE，指令；R-READ，读
+DRADD1   EQU   08003H   ;读显示数据地址（E1）D--DATA，数据；R-READ，读
+
+CWADD2   EQU   08004H   ;写指令代码地址（E2）
+DWADD2   EQU   08005H   ;写显示数进地址（E2）
+CRADD2   EQU   08006H   ;读状态字地址（E2）
+DRADD2   EQU   08007H   ;读显示数据地址（E2）
+
+PD1      EQU   3DH      ;122/2 分成左右两半屏 122x32
+
+COLUMN   EQU   30H
+PAGE_    EQU   31H      ;页地址寄存器 D1,DO:页地址
+CODE_    EQU   32H      ;字符代码寄存器
+COUNT    EQU   33H      ;计数器
+DIR      equ   34h
+CTEMP    EQU   38H
+
+COM      EQU   20H      ;指令寄存器
+DAT      EQU   21H      ;数据寄存器
+
+         ORG    0
+   MAIN: LCALL  INIT
+         LCALL  CLEAR
+         MOV    CTEMP,#0
+         MOV    DIR,#0
+AAA:     MOV    PAGE_,#02H
+         MOV    COLUMN,CTEMP
+         MOV    CODE_,#00H
+         LCALL  CCW_PR
+         MOV    PAGE_,#02H
+         MOV    A,CTEMP
+         ADD    A,#10H
+         MOV    COLUMN,A
+         MOV    CODE_,#01H
+         LCALL  CCW_PR
+         MOV    PAGE_,#02H
+         MOV    A,CTEMP
+         ADD    A,#20H
+         MOV    COLUMN,A
+         MOV    CODE_,#02H
+         LCALL  CCW_PR
+         MOV    PAGE_,#02H
+         MOV    A,CTEMP
+         ADD    A,#30H
+         MOV    COLUMN,A
+         MOV    CODE_,#03H
+         LCALL  CCW_PR
+         LJMP   $
+;初始化程序
+INIT:    MOV   COM, #0E2H     ;复位
+         LCALL PR0
+         LCALL PR3
+         MOV   COM, #0A4H     ;正常驱动
+         LCALL PR0
+         LCALL PR3
+         MOV   COM, #0A9H     ;设置 1／32占空比
+         LCALL PR0
+         LCALL PR3
+         MOV   COM, #0A0H     ;正向排序设置
+         LCALL PR0
+         LCALL PR3
+         MOV   COM, #0C0H     ;设置显示起始行为第一行
+         LCALL PR0
+         LCALL PR3
+         MOV   COM, #0AFH     ;开显示设置
+         LCALL PR0
+         LCALL PR3
+         RET
+; 清屏
+CLEAR:   MOV   R4,#00H       ;页面地址暂存器设置
+CLEAR1:  MOV   A,R4          ;取页地址值
+         ORL   A,#0B8H       ;"或"页面地址设置代码
+         MOV   COM,A         ;页面地址设置
+         LCALL PR0
+         LCALL PR3
+         MOV   COM,#00H      ;列地址设置为"0"
+         LCALL PR0
+         LCALL PR3
+         MOV   R3,#80      ;一页清 80个字节
+CLEAR2:  MOV   DAT,#00H      ;显示数据为"0"
+         LCALL PR1
+         LCALL PR4
+         DJNZ  R3,CLEAR2     ;页内字节清零循环
+         INC   R4            ;页地址暂存器加一
+         CJNE  R4,#04H,CLEAR1;RAM区清零循环
+         RET
+;1．写指令代码子程序（E1）
+PR0:     PUSH  DPL
+         PUSH  DPH
+         MOV   DPTR,#CRADD1  ;设置读状态字地址
+PR01:    MOVX  A,@DPTR       ;读状态字
+         JB    ACC.7,PR01    ;判"忙"标志为句"0",否再读
+         MOV   DPTR,#CWADD1  ;设置写指令代码地址
+         MOV   A,COM         ;取指令代码
+         MOVX  @DPTR,A       ;写指令代码
+         POP   DPH
+         POP   DPL
+         RET
+;2.写显示数据子程序（E1）
+PR1:     PUSH  DPL
+         PUSH  DPH
+         MOV   DPTR,#CRADD1 ;设置读状态字地址
+PR11:    MOVX  A,@DPTR      ;读状态宇
+         JB    ACC.7,PR11   ;判"忙"标志为"0",否再读
+         MOV   DPTR,#DWADD1 ;设置写显示数据地址
+         MOV   A,DAT        ;取数据
+         MOVX  @DPTR,A      ;写数据
+         POP  DPH
+         POP   DPL
+         RET
+;4.写指令代码子程序（E2）
+PR3:     PUSH  DPL
+         PUSH  DPH
+         MOV   DPTR,#CRADD2  ;设置读状态字地址
+PR31:    MOVX  A,@DPTR       ;读状态字
+         JB    ACC.7,PR31    ;判"忙"陈志为"0"否,否再读
+         MOV   DPTR,#CWADD2  ;设置写指令代码地址
+         MOV   A,COM         ;取指令代码
+         MOVX  @DPTR,A       ;写指令代码
+         POP   DPH
+         POP   DPL
+         RET
+;  5.写显示数据子程序（E2）
+PR4:     PUSH  DPL
+         PUSH  DPH
+         MOV   DPTR,#CRADD2   ;设置读状态字地址
+PR41:    MOVX  A,@DPTR        ;读状态字
+         JB    ACC.7,PR41     ;判"忙"标志为"0"否,否再读
+         MOV   DPTR, #DWADD2  ;设置写显示数据地址
+         MOV   A,DAT          ;取数据
+         MOVX  @DPTR,A        ;写数据
+         POP   DPH
+         POP   DPL
+         RET
+;  中文显示子程序
+CCW_PR:  MOV   DPTR,#CCTAB     ;确定字符字模块首地址
+         MOV   A,CODE_         ;取代码
+         MOV   B,#20H          ;字模块宽度为 32个字节
+         MUL   AB              ;代码×32
+         ADD   A,DPL           ;字符字模块首地址
+         MOV   DPL,A           ;字模库首地址＋代码×32
+         MOV   A,B
+         ADDC  A,DPH
+         MOV   DPH,A
+         PUSH  COLUMN          ;列地址入栈
+         PUSH  COLUMN          ;列地址入栈
+         MOV   CODE_,#00H      ;代码寄存器借用为间址寄存器
+CCW_1:   MOV   COUNT,#10H      ;计数器设置为 16
+         MOV   A,PAGE_         ;读页地址寄存器
+         ANL   A,#03H          ;取页地址有效值
+         ORL   A,#0B8H         ;"或"页地址设置代码
+         MOV   COM,A           ;设置页地址
+         LCALL PR0
+         LCALL PR3
+         POP   COLUMN          ;取列地址值
+         MOV   A,COLUMN        ;读列地址寄存器
+         CLR   C
+         SUBB  A,#PD1          ;列地址-模块参数
+         JC    CCW_2           ;＜0为左半屏显示区域（E1）
+         MOV   COLUMN,A        ;≥0为右半屏显示区域（E2）
+         MOV   A,PAGE_
+         SETB  ACC.3           ;设置区域标志位。
+         MOV   PAGE_,A         ;"0"为E1,"1"为E2
+CCW_2:   MOV   COM,COLUMN      ;设置列地址值
+         MOV   A,PAGE_         ;判区域标志以确定设置哪个控制器
+         JNB   ACC.3,CCW_3
+         LCALL PR3             ;区域E2
+         LJMP  CCW_4
+CCW_3:   LCALL PR0             ;区域E1
+CCW_4:   MOV   A,CODE_         ;取间址寄存器值
+         MOVC  A,@A+DPTR       ;取汉字字模数据
+         MOV   DAT,A           ;写数据
+         MOV   A,PAGE_
+         JNB   ACC.3,CCW_5
+         LCALL PR4             ;区域E2
+         LJMP  CCW_6
+CCW_5:   LCALL PR1             ;区域E1
+CCW_6:   INC   CODE_           ;间址寄存器加一
+         INC   COLUMN          ;列地址寄存器加一
+         MOV   A,COLUMN        ;判列地址是否超出区域范围、
+         CJNE  A,#PD1,CCW_7
+CCW_7:   JC    CCW_8           ;未超出则继续
+         MOV   A,PAGE_         ;超出则判是否在区域E2
+         JB    ACC.3,CCW_8     ;在区域E2则退出
+         SETB  ACC.3           ;在区域E1则修改成区域E2
+         MOV   PAGE_,A
+         MOV   COM,#00H        ;设置区域E2列地址为"0"
+         LCALL PR3
+CCW_8:   DJNZ  COUNT,CCW_4     ;当页循环
+         MOV   A,PAGE_         ;读页地址寄存器
+         JB    ACC.7,CCW_9     ;判完成标志D7位,"1"则完成退出
+         INC   A               ;否则页地址加一
+         SETB  ACC.7           ;置完成位为"1"
+         CLR   ACC.3
+         MOV   PAGE_,A
+         MOV   CODE_,#10H      ;间址寄存器设置为 16
+         LJMP  CCW_1           ;大循环
+CCW_9:   RET
+
+;中文字符库
+CCTAB:
+         DB 000H,004H,0e4H,024H,024H,064H,0b4H,02fH ; 南
+         DB 024H,0a4H,064H,024H,024H,0e6H,004H,000H
+         DB 000H,000H,07fH,004H,005H,005H,005H,07fH
+         DB 005H,005H,005H,025H,044H,03fH,000H,000H
+         DB 000H,004H,004H,0e4H,024H,024H,025H,026H ; 京
+         DB 024H,024H,024H,0e4H,006H,004H,000H,000H
+         DB 000H,020H,010H,019H,00DH,041H,081H,07fH
+         DB 001H,001H,005H,00dH,038H,010H,000H,000H
+         DB 000H,080H,060H,0f8H,007H,00aH,028H,028H ; 伟
+         DB 028H,0ffH,028H,028H,028H,028H,000H,000H
+         DB 001H,000H,000H,0fFH,000H,001H,001H,001H
+         DB 001H,0ffH,001H,021H,041H,03fH,000H,000H
+         DB 008H,008H,089H,0ceH,028H,018H,002H,07aH ; 福
+         DB 04aH,04aH,04aH,04aH,04aH,07aH,002H,000H
+         DB 002H,001H,000H,0ffH,001H,002H,0ffH,049H
+         DB 049H,049H,07fH,049H,049H,049H,0ffH,000H
+END

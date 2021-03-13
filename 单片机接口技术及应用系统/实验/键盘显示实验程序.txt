@@ -1,0 +1,82 @@
+     MOV A,#00H
+     MOV 7CH,A 
+     MOV 7DH,A
+     MOV 7EH,A
+     MOV 7FH,A
+     ACALL DISP
+KEY1:ACALL KS
+     JNZ LK1
+     ACALL DISP
+     SJMP KEY1
+LK1: ACALL DISP
+     ACALL DISP
+     ACALL KS
+     JNZ LK2
+     ACALL DISP
+     SJMP KEY1
+LK2: MOV R2,#0FEH
+     MOV R4,#0
+LK3: MOV A,R2
+     MOV P3,A
+     MOV A,P3
+     JB ACC.4,LONE
+     MOV A,#0
+     AJMP LKP
+LONE: JB ACC.5,LTWO
+      MOV A,#4
+      AJMP LKP
+LTWO: JB ACC.6,LTHR
+      MOV A,#8
+      AJMP LKP
+LTHR: JB ACC.7,NEXT
+      MOV A,#0CH
+ LKP: ADD A,R4
+      PUSH ACC
+ LK4: ACALL DISP
+      ACALL KS
+      JNZ LK4
+      POP ACC
+      ACALL DSPL
+      LJMP KEY1
+NEXT:INC R4
+     MOV A,R2
+     JNB ACC.3,KND
+     RL A
+     MOV R2,A
+     AJMP LK3
+ KND:AJMP KEY1
+DSPL:MOV 7CH,7DH
+     MOV 7DH,7EH
+     MOV 7EH,7FH
+     MOV 7FH,A
+     RET
+DISP£ºMOV DPTR£¬#TAB
+      MOV R0£¬#7CH
+      MOV R3£¬#01H
+ LD1£ºMOV P2£¬R3
+      MOV A£¬@R0
+      MOVC A,@A+DPTR
+      MOV P1,A
+      ACALL DELEY
+      INC R0
+      MOV A,R3
+      RL A
+      JB ACC.4,LD2   
+      MOV R3,A
+      SJMP LD1
+ LD2: RET
+DELEY:MOV R7,#02H
+      DL1:MOV R6,#0FEH
+      DL2:DJNZ R6,DL2
+      DJNZ R7,DL1 
+      RET
+TAB: DB 3FH,06H,5BH,4FH
+     DB 66H,6DH,7DH,07H,7FH
+     DB 67H,77H,7CH,39H,5EH
+     DB 79H,71H,00H
+KS:   MOV P3,#0F0H ;¼üÉ¨Ãè³ÌÐò
+      MOV A,P3
+      CPL A
+      ANL A,#0F0H
+      RET
+      END
