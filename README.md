@@ -22,6 +22,14 @@
 
 • GitHub 带有便捷的 Issue 和 Pull Request 协作功能，并且可以方便地对贡献的质量进行监督和调整。
 
+如果访问不了Github，可以尝试魔法上网
+
+另外提供两个镜像网站，可能会稍微好些
+
+https://github.com.cnpmjs.org/KarlRaphel/HHU-Collection-of-Test-Papers
+
+https://github.wuyanzheshui.workers.dev//KarlRaphel/HHU-Collection-of-Test-Papers
+
 ## 贡献
 
 由于目前本项目中的文件大多是一人整理，如有不当之处敬请在Issues中指出
