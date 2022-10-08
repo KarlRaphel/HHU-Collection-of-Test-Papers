@@ -22,17 +22,16 @@
 
 • GitHub 带有便捷的 Issue 和 Pull Request 协作功能，并且可以方便地对贡献的质量进行监督和调整。
 
-如果访问不了Github，可以尝试魔法上网，此处提供两个Github镜像网站，可能会稍微好些
+项目地址：
+https://github.com/KarlRaphel/HHU-Collection-of-Test-Papers/
 
-https://github.com.cnpmjs.org/KarlRaphel/HHU-Collection-of-Test-Papers
+如果访问不了Github，可以尝试魔法上网，或Github镜像网站，可能会稍微好些
 
-https://github.wuyanzheshui.workers.dev//KarlRaphel/HHU-Collection-of-Test-Papers
-
-此外，本项目在Coding有镜像项目，方便国内网络进行访问
+此外，本项目在Coding有镜像项目，方便国内网络进行访问**因coding容量问题，已不更新**
 
 https://hhuctp.coding.net/public/HHUCTP/HHU-Collection-of-Test-Papers/git/files
 
-由于Coding的仓库大小有2GB限制，故当GitHub仓库内容大于2GB时将会自动暂停同步，恕不另行通知
+由于Coding的仓库大小有1GB限制，故当GitHub仓库内容大于1GB时将会自动暂停同步，恕不另行通知
 
 ## 贡献
 
