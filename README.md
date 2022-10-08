@@ -27,11 +27,15 @@ https://github.com/KarlRaphel/HHU-Collection-of-Test-Papers/
 
 如果访问不了Github，可以尝试魔法上网，或Github镜像网站，可能会稍微好些
 
-此外，本项目在Coding有镜像项目，方便国内网络进行访问**因coding容量问题，已不更新**
+此外，本项目在Coding有镜像项目，方便国内网络进行访问   **因coding容量问题，已不更新**
 
 https://hhuctp.coding.net/public/HHUCTP/HHU-Collection-of-Test-Papers/git/files
 
-由于Coding的仓库大小有1GB限制，故当GitHub仓库内容大于1GB时将会自动暂停同步，恕不另行通知
+为方便不会使用的同学下载，新增我个人的网盘链接，不定期会同步：
+
+https://www.aliyundrive.com/s/d2fpRmMy4ep
+
+**由于网盘的特性，部分文件可能会被封、无法下载，有条件的同学还请访问GitHub下载。维护不易，网盘里放了我的收款码**^_^
 
 ## 贡献
 
